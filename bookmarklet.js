@@ -29,7 +29,7 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
 
     //dialog.append('Subway Status: <span id="subway-status"></span><br/>'); taking of scraping for now
 
-    dialog.append('Message: <br/><textarea id="message" style="width:500px; height:150px;"></textarea><br/>');
+    dialog.append('Message: <br/><textarea id="nyc-ofe-message" style="width:500px; height:150px;"></textarea><br/>');
 
     dialog.append('<a id="cal" href="foo" style="display:none;">Download iCal</a><br/>');
 
@@ -79,7 +79,7 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
       //some events
       'blur #datepicker': 'setDate',
       //'blur #location': 'scrapeSubway', taking off subway scraping for now
-      'blur #message': 'genCal',
+      'blur #nyc-ofe-message': 'genCal',
       'change #location': 'genMessage',
       'blur #location': 'genMessage',
       'blur #location': 'genMessage',
@@ -133,7 +133,7 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
       var address = $('#location').val(),
           models= Locations.where({site_location_address : address});
       //if(this.appointmentDate !== undefined && this.subwayStatus !== undefined){
-      $('#message').text(models[0].getDirections());
+      $('#nyc-ofe-message').text(models[0].getDirections());
       this.apptLocation = models[0].get('site_location_address');
       this.locationSet = true;
       //}
