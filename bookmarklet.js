@@ -14,18 +14,22 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
     base.init = function () {
       $('body').append('<div id="dialog" style="display:none;" title="OFC Canned Directions"><p id="content">Hi there</p></div>');
       var dialog = $('#dialog'),
-    body = $('body'),
-    content = $('p');
+          i = 1,
+          content = $('p');
     //body and content vars not used
 
     dialog.append('Location <select id="location"></select><br/>');
 
     //add datepicker
-    dialog.append('Date <input type="text" id="datepicker"/><br/>');
+    dialog.append('Date <input type="text" id="datepicker" maxlength="10"/><br/>');
+    dialog.append('Time: <select id="hours"></select>:<input type="text" id="minutes" maxlength="2" style="width:1.5em;"/><select id="ampm"><option val="pm">pm</option><option val="am">am</option></select><br/>');
+    for(i = 1; i < 13; i += 1){
+      $('#hours').append('<option val="'+i+'">'+i+'</option>');
+    }
 
     //dialog.append('Subway Status: <span id="subway-status"></span><br/>'); taking of scraping for now
 
-    dialog.append('Message: <textarea id="message"></textarea><br/>');
+    dialog.append('Message: <br/><textarea id="message"></textarea><br/>');
 
     dialog.append('<a id="cal" href="foo">Download iCal</a><br/>');
 
@@ -110,7 +114,7 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
     },
     setDate: function(){
       this.appointmentDate = $('#datepicker').val();
-      this.genMessage();
+      this.genCal();
     },
     scrapeSubway: function(){
       //eventually get the trains from the collection selected
@@ -126,8 +130,14 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
       //}
     },
     genCal: function(){
+
+      console.log(this.appointmentDate);
       $('#cal').show();
-      $('#cal').attr('href', '#');
+      $('#cal').attr('href', 'data:application/octet-stream;filename=event.ics,'+encodeURIComponent(this.genEvent()));
+    },
+    genEvent: function(){
+      var ev = 'BEGIN:VCALENDAR\r\nVERSION:1.0\r\nBEGIN:VEVENT\r\nDTSTART:20130303T090000\r\nDTEND:20130303T100000\r\nSUMMARY:RealTest\r\nLOCATION:Hello\r\nDESCRIPTION:ok\r\nPRIORITY:3\r\nEND:VEVENT\r\nEND:VCALENDAR';
+      return ev;
     }
 
   });
