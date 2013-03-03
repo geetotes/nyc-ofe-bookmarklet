@@ -1,7 +1,8 @@
 nyc-ofe-bookmarklet
 ===================
 
-Javascript bookmarklett with canned responses for directions to OFE locations
+Javascript bookmarklett with canned directions for directions to OFE locations
 
+To install, go to [this page](http://www.leesome.com/foo.html) and drag the link to your bookmarks bar in your browser. 
 
-<a href="javascript:(function () { var script = document.createElement('SCRIPT'); script.src = 'https://raw.github.com/geetotes/nyc-ofe-bookmarklet/master/bookmarklet.js'; document.body.appendChild(script); })()">link</a>
+To use, click on the link in your bookmarks bar.
