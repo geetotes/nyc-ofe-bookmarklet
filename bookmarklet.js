@@ -29,11 +29,12 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
 
     //dialog.append('Subway Status: <span id="subway-status"></span><br/>'); taking of scraping for now
 
-    dialog.append('Message: <br/><textarea id="message"></textarea><br/>');
+    dialog.append('Message: <br/><textarea id="message" style="width:500px; height:150px;"></textarea><br/>');
 
     dialog.append('<a id="cal" href="foo" style="display:none;">Download iCal</a><br/>');
 
-    dialog.dialog();
+    dialog.dialog({width: 700, height:350});
+
 
 
   //start backbone
@@ -133,15 +134,18 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
           models= Locations.where({site_location_address : address});
       //if(this.appointmentDate !== undefined && this.subwayStatus !== undefined){
       $('#message').text(models[0].getDirections());
+      this.apptLocation = models[0].get('site_location_address');
+      this.locationSet = true;
       //}
     },
     genCal: function(){
-      if(this.dateSet === true && this.timeSet === true){
+      if(this.dateSet === true && this.timeSet === true && this.locationSet === true){
         $('#cal').show();
         $('#cal').attr('href', 'data:application/octet-stream;filename=event.ics,'+encodeURIComponent(this.genEvent()));
       }
     },
     genEvent: function(){
+      this.appointmentDate = $('#datepicker').val();
       var ev,
           year = this.appointmentDate.slice(6,10),
           month = this.appointmentDate.slice(0,2),
@@ -160,7 +164,7 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
       if(finishHour < 10){
         finishHour = "0" + finishHour.toString();
       }
-      ev = 'BEGIN:VCALENDAR\r\nVERSION:1.0\r\nBEGIN:VEVENT\r\nDTSTART:' + year + month + day + 'T' + hour.toString() + minute +'00\r\nDTEND:' + year + month + day + 'T' + finishHour.toString() + minute + '00\r\nSUMMARY:RealTest\r\nLOCATION:Hello\r\nDESCRIPTION:ok\r\nPRIORITY:3\r\nEND:VEVENT\r\nEND:VCALENDAR';
+      ev = 'BEGIN:VCALENDAR\r\nVERSION:1.0\r\nBEGIN:VEVENT\r\nDTSTART:' + year + month + day + 'T' + hour.toString() + minute +'00\r\nDTEND:' + year + month + day + 'T' + finishHour.toString() + minute + '00\r\nSUMMARY:OFE Appointment\r\nLOCATION:'+this.apptLocation+'\r\nPRIORITY:3\r\nEND:VEVENT\r\nEND:VCALENDAR';
       return ev;
     }
 
