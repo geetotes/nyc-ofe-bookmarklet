@@ -12,7 +12,7 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
   // jqpath: '/my/jquery.js', // defaults to google cdn-hosted jquery
   ready: function(base) { // use base to expose a public method
     base.init = function () {
-      $('body').append('<div id="dialog" style="display:none;" title="OFC Canned Directions"><p id="content">Hi there</p></div>');
+      $('body').append('<div id="dialog" style="display:none;" title="OFC Canned Directions"></div>');
       var dialog = $('#dialog'),
           i = 1,
           content = $('p');
@@ -31,7 +31,7 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
 
     dialog.append('Message: <br/><textarea id="message"></textarea><br/>');
 
-    dialog.append('<a id="cal" href="foo">Download iCal</a><br/>');
+    dialog.append('<a id="cal" href="foo" style="display:none;">Download iCal</a><br/>');
 
     dialog.dialog();
 
@@ -81,7 +81,8 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
       'blur #message': 'genCal',
       'change #location': 'genMessage',
       'blur #location': 'genMessage',
-      'blur #location': 'genMessage'
+      'blur #location': 'genMessage',
+      'change #minutes': 'setMinutes'
   
     },
     initalize: function() {
@@ -97,7 +98,11 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
       this.addAll();
 
     },
-
+  
+    setMinutes: function() {
+      this.timeSet = true;
+      this.genCal();
+    },
     /*
      * loc is shorthand for location
      * because the syntax highlighting freaks me out
@@ -114,6 +119,7 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
     },
     setDate: function(){
       this.appointmentDate = $('#datepicker').val();
+      this.dateSet = true;
       this.genCal();
     },
     scrapeSubway: function(){
@@ -130,10 +136,10 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
       //}
     },
     genCal: function(){
-
-      console.log(this.appointmentDate);
-      $('#cal').show();
-      $('#cal').attr('href', 'data:application/octet-stream;filename=event.ics,'+encodeURIComponent(this.genEvent()));
+      if(this.dateSet === true && this.timeSet === true){
+        $('#cal').show();
+        $('#cal').attr('href', 'data:application/octet-stream;filename=event.ics,'+encodeURIComponent(this.genEvent()));
+      }
     },
     genEvent: function(){
       var ev,
