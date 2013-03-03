@@ -136,7 +136,25 @@ var MyBookmarklet = MyBookmarklet || new Bookmarklet({
       $('#cal').attr('href', 'data:application/octet-stream;filename=event.ics,'+encodeURIComponent(this.genEvent()));
     },
     genEvent: function(){
-      var ev = 'BEGIN:VCALENDAR\r\nVERSION:1.0\r\nBEGIN:VEVENT\r\nDTSTART:20130303T090000\r\nDTEND:20130303T100000\r\nSUMMARY:RealTest\r\nLOCATION:Hello\r\nDESCRIPTION:ok\r\nPRIORITY:3\r\nEND:VEVENT\r\nEND:VCALENDAR';
+      var ev,
+          year = this.appointmentDate.slice(6,10),
+          month = this.appointmentDate.slice(0,2),
+          day = this.appointmentDate.slice(3,5),
+          hour = parseInt($('#hours').val(), 10),
+          minute = $('#minutes').val(),
+          finishHour;
+      if($('#ampm').val() === "pm"){
+        hour = parseInt(hour, 10) + 12;
+      }
+      finishHour = hour + 1;
+
+      if(hour < 10){
+        hour = "0" + hour.toString();
+      }
+      if(finishHour < 10){
+        finishHour = "0" + finishHour.toString();
+      }
+      ev = 'BEGIN:VCALENDAR\r\nVERSION:1.0\r\nBEGIN:VEVENT\r\nDTSTART:' + year + month + day + 'T' + hour.toString() + minute +'00\r\nDTEND:' + year + month + day + 'T' + finishHour.toString() + minute + '00\r\nSUMMARY:RealTest\r\nLOCATION:Hello\r\nDESCRIPTION:ok\r\nPRIORITY:3\r\nEND:VEVENT\r\nEND:VCALENDAR';
       return ev;
     }
 
@@ -195,7 +213,7 @@ function Bookmarklet(options){
     }
 
     // Load the first js file in the array.
-    $.getScript(scripts[0] + cachebuster, function(){
+  $.getScript(scripts[0] + cachebuster, function(){
         // asyncronous recursion, courtesy Paul Irish.
         loadJS(scripts.slice(1));
     });
